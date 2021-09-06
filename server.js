@@ -2,7 +2,6 @@
 const http = require('http');
 //Création application express
 const app = require('./app');
-
 //la fonction normalizePort renvoie un port valide, 
 //qu'il soit fourni sous la forme d'un numéro ou d'une chaîne
 const normalizePort = val => {
@@ -18,7 +17,7 @@ const normalizePort = val => {
 };
 
 //Si la plateforme de déploiement propose un port par défaut, express l'utilise, sinon express utilise le port 3000
-const port = normalizePort(process.env.PORT || '3000');
+const port = normalizePort(process.env.APP_PORT);
 app.set('port', port);
 
 //la fonction errorHandler  recherche les différentes erreurs et les gère de manière appropriée. 
