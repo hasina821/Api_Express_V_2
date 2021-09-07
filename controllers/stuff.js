@@ -1,5 +1,6 @@
 const Thing = require('../models/thing');
 const fs = require('fs');
+const db = require('../service/connect');
 
 module.exports = {
   createThing : (req, res, next) => {
@@ -66,6 +67,56 @@ module.exports = {
     Thing.updateOne({ _id: req.params.id }, { ...thingObject, _id: req.params.id })
       .then(() => res.status(200).json({ message: 'Objet modifié !'}))
       .catch(error => res.status(400).json({ error }));
+  },
+
+  test: (req, res) => {
+    console.log("==> TEST");
+
+    /*
+    let list_eleve = async () => {
+      let resultats;
+      try {
+        resultats = await donnees_eleve();
+      } catch (error) {
+        resultats = error.message;
+      }
+      return resultats
+    }
+    list_eleve().then(resultats => {
+      console.log(resultats);
+      res.send(resultats);
+    })
+    */
+    (async ()=>{
+      let donnees_eleve = () => {
+        return new Promise((resolve, reject) => {
+          db.query("SELECT id FROM eleve", function(err, resultats){
+            if(err) reject(new Error("Erreur données élèves"));
+            resolve(resultats);
+          })
+        })
+      }
+
+      let resultats;
+      try {
+        resultats = await donnees_eleve();
+      } catch (error) {
+        resultats = error.message;
+      }
+      console.log(resultats);
+      res.send(resultats)
+    })()
+  
+    /*
+    const emails = [
+      "ntsoa@gmail.com",
+      "koto@gmail.com",
+      "soa@gmail.com"
+    ];
+    emails.forEach((email) => {
+      console.log(email)
+    })
+    */
   }
 
 }
