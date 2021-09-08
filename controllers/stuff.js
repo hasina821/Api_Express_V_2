@@ -1,4 +1,5 @@
 const Thing = require('../models/thing');
+const eleve = require('../models/eleve');
 const fs = require('fs');
 const db = require('../service/connect');
 
@@ -117,6 +118,11 @@ module.exports = {
       console.log(email)
     })
     */
-  }
+  },
+
+  getListEleve: async (req, res) => {
+    let listEleve = await eleve.getListEleve();
+    res.send(listEleve);
+  } 
 
 }

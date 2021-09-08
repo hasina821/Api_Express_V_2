@@ -26,4 +26,7 @@ app.use('/api/stuff', stuffRoutes);
 const userRoutes = require('./routes/user');
 app.use('/api/auth', userRoutes);
 
+const eleveCtrl = require('./routes/eleve');
+app.use('/api/eleve', eleveCtrl);
+
 module.exports = app;
