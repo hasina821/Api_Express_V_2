@@ -72,7 +72,6 @@ module.exports = {
 
   test: (req, res) => {
     console.log("==> TEST");
-
     /*
     let list_eleve = async () => {
       let resultats;
@@ -108,7 +107,7 @@ module.exports = {
       res.send(resultats)
     })()
   
-    /*
+    
     const emails = [
       "ntsoa@gmail.com",
       "koto@gmail.com",
@@ -117,7 +116,7 @@ module.exports = {
     emails.forEach((email) => {
       console.log(email)
     })
-    */
+    
   },
 
   getListEleve: async (req, res) => {
