@@ -1,46 +1,94 @@
-const bcrypt = require("bcrypt");
-const jwt = require('jsonwebtoken');
-const User = require('../models/user');
+const mdlsUser=require("../models/users");
 
-module.exports = {
-  signup: (req, res, next) => {
-      console.log(req.body);
-      bcrypt.hash(req.body.password, 10)
-          .then(hash => {
-          const user = new User({
-            email: req.body.email,
-            password: hash
-          });
-          user.save()
-            .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
-            .catch(error => res.status(400).json({ error }));
-      })
-      .catch(error => res.status(500).json({ error }));
-  },
 
-  login : (req, res, next) => {
-    User.findOne({ email: req.body.email })
-        .then(user => {
-        if (!user) {
-          return res.status(401).json({ error: 'Utilisateur non trouvé !' });
+module.exports={
+    create:async(req,res)=>{
+        try {
+            let {nom,mail,password}=req.body;
+            let user=await mdlsUser.create(nom,mail,password);
+            res.status(200).send(user)
+            
+        } catch (error) {
+            res.send(error)
+            
         }
-        bcrypt.compare(req.body.password, user.password)
-          .then(valid => {
-            if (!valid) {
-              return res.status(401).json({ error: 'Mot de passe incorrect !' });
-            }
-            res.status(200).json({
-              userId: user._id,
-              token: jwt.sign(
-                { userId: user._id },
-                'RANDOM_TOKEN_SECRET',
-                { expiresIn: '24h' }
-              )
-            });
-        })
-        .catch(error => res.status(500).json({ error }));
-    })
-    .catch(error => res.status(500).json({ error }));
-  }
+    },
+    createUserRole:async(req,res)=>{
+        try {
+            let {id_users,id_role}=req.body;
+            let userR=await mdlsUser.giveRoleToUser(id_users,id_role);
+            res.status(200).send({
+                message:`Users with id ${id_users} has a role now`
+            })
+            
+        } catch (error) {
+            res.status(500).send(error)            
+        }
+
+    },
+    
+    getAllUser:async(req,res)=>{
+        try {
+            let users=await mdlsUser.fetchUser();
+            res.status(200).send(users)
+            
+        } catch (error) {
+            res.status(500).send(error)
+            
+        }
+    },
+    getUserRole:async(req,res)=>{
+        try {
+            let id=parseInt(req.params.id);
+            let user=await mdlsUser.getUserRole(id);
+
+            res.status(200).send(user.rows)
+            
+        } catch (error) {
+            res.status(error)
+            
+        }
+
+    },
+    getOneUser:async(req,res)=>{
+        try {
+            let id=parseInt(req.params.id);
+            let user=await mdlsUser.getOneUser(id);
+            res.status(200).send(user);
+
+            
+        } catch (error) {
+            res.status(500).send(error)
+        }
+    },
+
+    updat:async(req,res)=>{
+        try {
+            let id=parseInt(req.params.id);
+            let {nom,mail,password}=req.body;
+            let updateUser=await mdlsUser.updateUser(nom,mail,password,id);
+            res.send({
+                message:`User with id ${id} is updated`
+            })
+            
+        } catch (error) {
+            res.status(500).send(error)
+        }
+    },
+
+    delUser:async(req,res)=>{
+        try {
+            let id=parseInt(req.params.id);
+            let delUser=await mdlsUser.delUser(id);
+            res.status(200).send({
+                message:`User with id ${id} is deleted`
+            })
+            
+        } catch (error) {
+            res.status(500).send(error)
+            
+        }
+    }
+
 
 }
